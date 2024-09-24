@@ -1,0 +1,32 @@
+@baseUrl = http://localhost:3333
+@authToken = {{authenticate.response.body.access_token}}
+
+
+# @name authenticate
+POST {{baseUrl}}/sessions
+Content-Type: application/json
+
+{
+    "email": "mail@gmail.com",
+    "password": "test123@Ga"
+}
+
+###
+
+# @name Create_Question
+POST {{baseUrl}}/questions
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "title": "Create first question 3",
+    "content": "This is the first question created by API testing"
+}
+
+
+###
+
+# @name fetch_recent_questions
+GET {{baseUrl}}/questions?page=1&perPage=1
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
