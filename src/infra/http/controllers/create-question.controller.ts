@@ -4,7 +4,7 @@ import { JwtAuthGuard } from '@/infra/auth/jwt-auth.guard'
 import { TokenSchema } from '@/infra/auth/jwt.strategy'
 import { z } from 'zod'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation.pipe'
-import { PrismaService } from '@/infra/prisma/prisma.service'
+import { CreateQuestionUseCase } from '@/domain/forum/application/use-cases/create-question'
 
 const createQuestionBodySchema = z.object({
   title: z.string(),
@@ -18,7 +18,7 @@ type CreateQuestionBodySchema = z.infer<typeof createQuestionBodySchema>
 @Controller()
 @UseGuards(JwtAuthGuard)
 export class CreateQuestionController {
-  constructor(private prisma: PrismaService) {}
+  constructor(private createQuestionUseCase: CreateQuestionUseCase) {}
 
   @Post('/questions')
   @HttpCode(201)
@@ -29,27 +29,11 @@ export class CreateQuestionController {
     const { title, content } = body
     const userId = user.sub
 
-    const slug = this.createSlug(title)
-
-    await this.prisma.question.create({
-      data: {
-        title,
-        content,
-        slug,
-        author: { connect: { id: userId } },
-      },
+    await this.createQuestionUseCase.execute({
+      title,
+      content,
+      authorId: userId,
+      attachmentIds: [], // TODO: Add attachmentIds from request body.
     })
-  }
-
-  private createSlug(input: string): string {
-    const normalized = input.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-
-    const sanitized = normalized.replace(/[^a-zA-Z0-9\s]/g, '')
-
-    const spaced = sanitized.replace(/\s+/g, '-')
-
-    const slug = spaced.toLowerCase()
-
-    return slug.replace(/-+/g, '-').replace(/^-|-$/g, '')
   }
 }
