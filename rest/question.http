@@ -19,7 +19,7 @@ Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
 {
-    "title": "Create first question 15",
+    "title": "Create first question 10",
     "content": "This is the first question created by API testing"
 }
 
@@ -27,6 +27,6 @@ Authorization: Bearer {{authToken}}
 ###
 
 # @name fetch_recent_questions
-GET {{baseUrl}}/questions?page=1&perPage=1
+GET {{baseUrl}}/questions?page=1
 Content-Type: application/json
 Authorization: Bearer {{authToken}}

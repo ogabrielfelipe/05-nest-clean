@@ -19,12 +19,11 @@ export class InMemoryQuestionsRepository implements QuestionsRepository {
     return questions
   }
 
-  async save(question: Question): Promise<Question> {
+  async save(question: Question) {
     const index = this.items.findIndex((item) => item.id === question.id)
 
     this.items[index] = question
     DomainEvents.dispatchEventsForAggregate(question.id)
-    return this.items[index]
   }
 
   async create(question: Question): Promise<void> {

@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   HttpCode,
@@ -6,12 +7,11 @@ import {
   UnauthorizedException,
   UsePipes,
 } from '@nestjs/common'
-import { JwtService } from '@nestjs/jwt'
-import { compare } from 'bcryptjs'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation.pipe'
-import { PrismaService } from '@/infra/database/prisma/prisma.service'
 
 import { z } from 'zod'
+import { AuthenticateStudentUseCase } from '@/domain/forum/application/use-cases/authenticate-student'
+import { WrongCredentialsError } from '@/domain/forum/application/use-cases/errors/wrong-credentials-error'
 
 const authenticateBodySchema = z.object({
   email: z.string().email(),
@@ -22,10 +22,7 @@ type AuthenticateBodySchema = z.infer<typeof authenticateBodySchema>
 
 @Controller('/sessions')
 export class AuthenticateController {
-  constructor(
-    private jwt: JwtService,
-    private prisma: PrismaService,
-  ) {}
+  constructor(private authenticateStudent: AuthenticateStudentUseCase) {}
 
   @Post()
   @HttpCode(201)
@@ -33,24 +30,23 @@ export class AuthenticateController {
   async handle(@Body() body: AuthenticateBodySchema) {
     const { email, password } = body
 
-    const user = await this.prisma.user.findUnique({
-      where: { email },
-      select: { id: true, password: true },
+    const result = await this.authenticateStudent.execute({
+      email,
+      password,
     })
 
-    if (!user) {
-      throw new UnauthorizedException('Invalid credentials')
+    if (result.isLeft()) {
+      const error = result.value
+
+      switch (error.constructor) {
+        case WrongCredentialsError:
+          throw new UnauthorizedException(error.message)
+        default:
+          throw new BadRequestException(error.message)
+      }
     }
 
-    const isPasswordValid = await compare(password, user.password)
-
-    if (!isPasswordValid) {
-      throw new UnauthorizedException('Invalid credentials')
-    }
-
-    const accessToken = this.jwt.sign({
-      sub: user.id,
-    })
+    const accessToken = result.value.accessToken
 
     return { access_token: accessToken }
   }
