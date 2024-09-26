@@ -2,50 +2,45 @@ import request from 'supertest'
 import { Test } from '@nestjs/testing'
 import { INestApplication } from '@nestjs/common'
 import { AppModule } from '@/infra/app.module'
-import { PrismaService } from '@/infra/database/prisma/prisma.service'
-import { hash } from 'bcryptjs'
 import { JwtService } from '@nestjs/jwt'
+import { StudentFactory } from 'test/factories/make-student'
+import { QuestionFactory } from 'test/factories/make-question'
+import { Slug } from '@/domain/forum/enterprise/entities/value-object/slug'
+import { DatabaseModule } from '@/infra/database/database.module'
 
 describe('E2E -> Fetch Recent Questions', () => {
   let app: INestApplication
-  let prisma: PrismaService
   let jwt: JwtService
+  let studentFactory: StudentFactory
+  let questionFactory: QuestionFactory
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
-      imports: [AppModule],
+      imports: [AppModule, DatabaseModule],
+      providers: [StudentFactory, QuestionFactory],
     }).compile()
 
     app = moduleRef.createNestApplication()
 
-    prisma = moduleRef.get(PrismaService)
     jwt = moduleRef.get(JwtService)
+    studentFactory = moduleRef.get(StudentFactory)
+    questionFactory = moduleRef.get(QuestionFactory)
 
     await app.init()
   })
 
   it('should be able to fetch recent questions', async () => {
-    const user = await prisma.user.create({
-      data: {
-        name: 'John Doe',
-        email: 'john@doe.com',
-        password: await hash('12345G*A32', 8),
-      },
-      select: { id: true, email: true },
-    })
+    const user = await studentFactory.makePrismaStudent()
 
-    for (let i = 0; i < 2; i++) {
-      await prisma.question.create({
-        data: {
-          title: `Question ${i + 1}`,
-          content: `Content for question ${i + 1}`,
-          slug: `question-${i + 1}`,
-          author: { connect: { id: user.id } },
-        },
+    const accessToken = jwt.sign({ sub: user.id.toString() })
+
+    for (let i = 1; i < 5; i++) {
+      await questionFactory.makePrismaQuestion({
+        title: `Question ${i + 1}`,
+        slug: Slug.create(`question-${i + 1}`),
+        authorId: user.id,
       })
     }
-
-    const accessToken = jwt.sign({ sub: user.id })
 
     const response = await request(app.getHttpServer())
       .get('/questions?page=1')
@@ -53,31 +48,21 @@ describe('E2E -> Fetch Recent Questions', () => {
       .send()
 
     expect(response.statusCode).toBe(200)
-    expect(response.body.questions).toHaveLength(2)
+    expect(response.body.questions).toHaveLength(4)
   })
 
   it('should be able to fetch recent questions paginated', async () => {
-    const user = await prisma.user.create({
-      data: {
-        name: 'John Doe',
-        email: 'john-paginated-test@doe.com',
-        password: await hash('12345G*A32', 8),
-      },
-      select: { id: true, email: true },
-    })
+    const user = await studentFactory.makePrismaStudent()
+
+    const accessToken = jwt.sign({ sub: user.id.toString() })
 
     for (let i = 10; i < 15; i++) {
-      await prisma.question.create({
-        data: {
-          title: `Question ${i + 1}`,
-          content: `Content for question ${i + 1}`,
-          slug: `question-${i + 1}`,
-          author: { connect: { id: user.id } },
-        },
+      await questionFactory.makePrismaQuestion({
+        title: `Question ${i + 1}`,
+        slug: Slug.create(`question-${i + 1}`),
+        authorId: user.id,
       })
     }
-
-    const accessToken = jwt.sign({ sub: user.id })
 
     const response = await request(app.getHttpServer())
       .get('/questions?page=2&perPage=3')

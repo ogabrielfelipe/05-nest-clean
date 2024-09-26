@@ -5,55 +5,49 @@ import { AppModule } from '@/infra/app.module'
 import { JwtService } from '@nestjs/jwt'
 import { StudentFactory } from 'test/factories/make-student'
 import { DatabaseModule } from '@/infra/database/database.module'
+import { QuestionFactory } from 'test/factories/make-question'
+import { Slug } from '@/domain/forum/enterprise/entities/value-object/slug'
 
-describe('E2E -> Create Question', () => {
+describe('E2E -> Get Question by Slug', () => {
   let app: INestApplication
-  let jwt: JwtService
   let studentFactory: StudentFactory
+  let questionFactory: QuestionFactory
+  let jwt: JwtService
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule, DatabaseModule],
-      providers: [StudentFactory],
+      providers: [StudentFactory, QuestionFactory],
     }).compile()
 
     app = moduleRef.createNestApplication()
 
     studentFactory = moduleRef.get(StudentFactory)
+    questionFactory = moduleRef.get(QuestionFactory)
     jwt = moduleRef.get(JwtService)
 
     await app.init()
   })
 
-  it('should be able to create a new question', async () => {
+  it('should be able to get a question by slug', async () => {
     const user = await studentFactory.makePrismaStudent()
 
     const accessToken = jwt.sign({ sub: user.id.toString() })
 
+    await questionFactory.makePrismaQuestion({
+      title: `Question 01`,
+      slug: Slug.create('question-01'),
+      authorId: user.id,
+    })
+
     const response = await request(app.getHttpServer())
-      .post('/questions')
+      .get('/questions/question-01')
       .set('Authorization', `Bearer ${accessToken}`)
-      .send({
-        title: 'Create first question',
-        content: 'This is the first question created by API testing',
-      })
+      .send()
 
-    expect(response.statusCode).toBe(201)
-  })
-
-  it('should not be able to create a new question without authentication', async () => {
-    const response = await request(app.getHttpServer())
-      .post('/questions')
-      .set('Authorization', `Bearer `)
-      .send({
-        title: 'Create first question',
-        content: 'This is the first question created by API testing',
-      })
-
-    expect(response.statusCode).toBe(401)
+    expect(response.statusCode).toBe(200)
     expect(response.body).toEqual({
-      statusCode: 401,
-      message: 'Unauthorized',
+      question: expect.objectContaining({ title: 'Question 01' }),
     })
   })
 })
