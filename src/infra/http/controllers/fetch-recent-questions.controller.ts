@@ -5,10 +5,8 @@ import {
   Get,
   HttpCode,
   Query,
-  UseGuards,
 } from '@nestjs/common'
 import { CurrentUser } from '@/infra/auth/current-user-decorator'
-import { JwtAuthGuard } from '@/infra/auth/jwt-auth.guard'
 import { TokenSchema } from '@/infra/auth/jwt.strategy'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation.pipe'
 import { z } from 'zod'
@@ -34,7 +32,6 @@ const queryValidationPipe = new ZodValidationPipe(queryParamsSchema)
 type QueryParamsSchema = z.infer<typeof queryParamsSchema>
 
 @Controller()
-@UseGuards(JwtAuthGuard)
 export class FetchRecentQuestionsController {
   constructor(private fetchRecentQuestions: FetchRecentQuestionsUseCase) {}
 
