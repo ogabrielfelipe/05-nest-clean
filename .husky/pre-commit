@@ -2,8 +2,9 @@ echo 'Verify errors in typesScript, formatting code and execute scripts of the t
 
 pnpm verify
 pnpm format
+pnpm lint:fix
 pnpm lint
-pnpm test:e2e
 pnpm test
+pnpm test:e2e
 
 echo 'Done'
