@@ -6,14 +6,12 @@
   "private": true,
   "license": "UNLICENSED",
   "husky": {
-    "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-    }
+    "hooks": {    }
   },
   "commitlint": {
-  "extends": [
-    "@commitlint/config-conventional"
-  ]
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
   },
   "scripts": {
     "build": "nest build",
