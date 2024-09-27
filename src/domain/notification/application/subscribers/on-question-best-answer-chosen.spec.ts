@@ -55,8 +55,6 @@ describe('On Question Best Answer Chosen', async () => {
 
     await inMemoryQuestionsRepository.save(question)
 
-    console.log(sendNotificationExecuteSpy.getMockName())
-
     await waitFor(() =>
       expect(sendNotificationExecuteSpy.getMockName()).toEqual('execute'),
     )

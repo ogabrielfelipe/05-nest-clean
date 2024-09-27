@@ -11,18 +11,18 @@ export class PrismaQuestionCommentsRepository
 {
   constructor(private prisma: PrismaService) {}
 
-  async findById(questionCommentId: string) {
-    const question = await this.prisma.comment.findUnique({
+  async findById(id: string) {
+    const questionComment = await this.prisma.comment.findUnique({
       where: {
-        id: questionCommentId,
+        id,
       },
     })
 
-    if (!question) {
+    if (!questionComment) {
       return null
     }
 
-    return PrismaQuestionCommentMapper.toDomain(question)
+    return PrismaQuestionCommentMapper.toDomain(questionComment)
   }
 
   async findManyByQuestionId(questionId: string, params: PaginationParams) {

@@ -39,12 +39,8 @@ export class CreateAccountController {
       password,
     })
 
-    console.log(result.value)
-
     if (result.isLeft()) {
       const error = result.value
-
-      console.log(result.value)
 
       switch (error.constructor) {
         case StudentAlreadyExistsError:
