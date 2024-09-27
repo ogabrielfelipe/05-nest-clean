@@ -5,19 +5,19 @@
   "author": "",
   "private": true,
   "license": "UNLICENSED",
+  "husky": {
+    "hooks": {}
+  },
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-
+    "prepare": "husky",
     "verify": "pnpm tsc --noEmit",
-
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
-
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-
     "test": "vitest run",
     "test:watch": "vitest",
     "test:cov": "vitest run --coverage",
@@ -62,6 +62,8 @@
     "@vitest/coverage-v8": "^2.1.1",
     "dotenv": "^16.4.5",
     "eslint": "^9.11.0",
+    "husky": "^9.1.6",
+    "lint-staged": "^15.2.10",
     "prisma": "^5.19.1",
     "source-map-support": "^0.5.21",
     "supertest": "^7.0.0",

@@ -1,6 +1,5 @@
 import { AnswerAttachmentsRepository } from './../repositories/answer-attachments-repository'
 import { Either, left, right } from '@/core/either'
-import { Answer } from '../../enterprise/entities/answer'
 import { AnswersRepository } from '../repositories/answers-repository'
 import { ResourceNotFoundError } from '../../../../core/errors/errors/resource-not-found-error'
 import { NotAllowedError } from '../../../../core/errors/errors/not-allowed-error'
@@ -18,9 +17,7 @@ interface EditAnswerUseCaseRequest {
 
 type EditAnswerUseCaseResponse = Either<
   ResourceNotFoundError | NotAllowedError,
-  {
-    answer: Answer
-  }
+  object
 >
 
 @Injectable()
@@ -67,10 +64,8 @@ export class EditAnswerUseCase {
     answer.content = content
     answer.attachments = answerAttachmentList
 
-    const answerEdited = await this.answersRepository.save(answer)
+    await this.answersRepository.save(answer)
 
-    return right({
-      answer: answerEdited,
-    })
+    return right({})
   }
 }

@@ -50,6 +50,7 @@ describe('Fetch Answers By Question', () => {
 
     const { value } = await sut.execute({
       page: 1,
+      perPage: 10,
       questionId: 'question-id-01',
     })
 
@@ -75,6 +76,7 @@ describe('Fetch Answers By Question', () => {
 
     const { value } = await sut.execute({
       page: 2,
+      perPage: 10,
       questionId: 'question-id-01',
     })
 

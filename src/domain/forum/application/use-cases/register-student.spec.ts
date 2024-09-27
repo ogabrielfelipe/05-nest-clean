@@ -1,6 +1,4 @@
-import { Student } from '../../enterprise/entities/student'
 import { InMemoryStudentsRepository } from './../../../../../test/repositories/in-memory-students-repository'
-import { StudentAlreadyExistsError } from './errors/student-already-exists-error'
 import { RegisterStudentUseCase } from './register-student'
 import { FakeHasher } from 'test/cryptography/fake-hasher'
 

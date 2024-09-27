@@ -6,7 +6,7 @@ import type { UniqueEntityId } from '../entities/unique-entity-id'
 
 class CustomAggregateCreated implements DomainEvent {
   public ocurredAt: Date
-  private aggregate: CustomAggregate // eslint-disable-line
+  private aggregate: CustomAggregate; // eslint-disable-line
 
   constructor(aggregate: CustomAggregate) {
     this.aggregate = aggregate

@@ -1,4 +1,3 @@
-import { StudentProps } from './../../dist/src/domain/forum/enterprise/entities/student.d'
 import { faker } from '@faker-js/faker'
 
 import { UniqueEntityId } from '@/core/entities/unique-entity-id'

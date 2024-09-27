@@ -41,6 +41,7 @@ describe('Fetch Comments By Answer', () => {
 
     const { value } = await sut.execute({
       page: 1,
+      perPage: 10,
       answerId: 'answer-id-01',
     })
 
@@ -66,6 +67,7 @@ describe('Fetch Comments By Answer', () => {
 
     const { value } = await sut.execute({
       page: 2,
+      perPage: 10,
       answerId: 'answer-id-01',
     })
 

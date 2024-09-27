@@ -11,7 +11,6 @@ import { CurrentUser } from '@/infra/auth/current-user-decorator'
 import { TokenSchema } from '@/infra/auth/jwt.strategy'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation.pipe'
 import { z } from 'zod'
-import { AnswerPresenter } from '../presenters/answer-presenter'
 import { QuestionCommentsPresenter } from '../presenters/question-comments-presenter'
 
 const queryParamsSchema = z.object({
