@@ -89,7 +89,7 @@ model Attachment {
   title String
   url   String
 
-  questionId String  @map("question_id")
+  questionId String? @map("question_id")
   answerId   String? @map("answer_id")
 
   question Question? @relation(fields: [questionId], references: [id])
