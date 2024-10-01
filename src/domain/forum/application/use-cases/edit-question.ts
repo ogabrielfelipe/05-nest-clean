@@ -7,6 +7,7 @@ import { QuestionAttachmentList } from '../../enterprise/entities/question-attac
 import { QuestionAttachment } from '../../enterprise/entities/question-attachment'
 import { UniqueEntityId } from '@/core/entities/unique-entity-id'
 import { Injectable } from '@nestjs/common'
+import { Question } from '../../enterprise/entities/question'
 
 interface EditQuestionUseCaseRequest {
   authorId: string
@@ -18,7 +19,9 @@ interface EditQuestionUseCaseRequest {
 
 type EditQuestionUseCaseResponse = Either<
   ResourceNotFoundError | NotAllowedError,
-  object
+  {
+    question: Question
+  }
 >
 
 @Injectable()
@@ -69,6 +72,6 @@ export class EditQuestionUseCase {
 
     await this.questionsRepository.save(question)
 
-    return right({})
+    return right({ question })
   }
 }
