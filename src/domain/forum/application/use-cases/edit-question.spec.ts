@@ -99,50 +99,40 @@ describe('Edit Question', () => {
     expect(result.value).toBeInstanceOf(NotAllowedError)
   })
 
-  it(' should sync new and removed attachments when editing a question', async () => {
+  it('should sync new and removed attachment when editing a question', async () => {
     const newQuestion = makeQuestion(
       {
-        authorId: new UniqueEntityId('author-01'),
+        authorId: new UniqueEntityId('author-1'),
       },
       new UniqueEntityId('question-1'),
     )
-
     await inMemoryQuestionsRepository.create(newQuestion)
-
     inMemoryQuestionAttachmentsRepository.items.push(
       makeQuestionAttachment({
         questionId: newQuestion.id,
-        attachmentId: new UniqueEntityId('attachment-1'),
+        attachmentId: new UniqueEntityId('1'),
       }),
       makeQuestionAttachment({
         questionId: newQuestion.id,
-        attachmentId: new UniqueEntityId('attachment-2'),
+        attachmentId: new UniqueEntityId('2'),
       }),
     )
-
-    console.log('1')
-    console.log(inMemoryQuestionAttachmentsRepository.items)
-
     const result = await sut.execute({
-      questionId: newQuestion.id.toString(),
-      authorId: 'author-01',
-      title: 'Updated Question',
-      content: 'This is an updated question',
-      attachmentIds: ['attachment-1', 'attachment-3'],
+      questionId: newQuestion.id.toValue(),
+      authorId: 'author-1',
+      title: 'Pergunta teste',
+      content: 'Conteúdo teste',
+      attachmentIds: ['1', '3'],
     })
-
-    console.log('2')
-    console.log(inMemoryQuestionAttachmentsRepository.items)
-
     expect(result.isRight()).toBe(true)
     expect(inMemoryQuestionAttachmentsRepository.items).toHaveLength(2)
     expect(inMemoryQuestionAttachmentsRepository.items).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          attachmentId: new UniqueEntityId('attachment-01'),
+          attachmentId: new UniqueEntityId('1'),
         }),
         expect.objectContaining({
-          attachmentId: new UniqueEntityId('attachment-03'),
+          attachmentId: new UniqueEntityId('3'),
         }),
       ]),
     )
