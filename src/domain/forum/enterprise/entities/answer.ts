@@ -26,7 +26,7 @@ export class Answer extends AggregateRoot<AnswerProps> {
     return this.props.questionId
   }
 
-  get attachment() {
+  get attachments() {
     return this.props.attachments
   }
 
@@ -51,7 +51,6 @@ export class Answer extends AggregateRoot<AnswerProps> {
     this.touch()
   }
 
-  // eslint-disable-next-line accessor-pairs
   set attachments(attachments: AnswerAttachmentList) {
     this.props.attachments = attachments
     this.touch()
