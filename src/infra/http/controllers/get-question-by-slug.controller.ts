@@ -7,8 +7,8 @@ import {
 } from '@nestjs/common'
 import { CurrentUser } from '@/infra/auth/current-user-decorator'
 import { TokenSchema } from '@/infra/auth/jwt.strategy'
-import { QuestionPresenter } from '../presenters/question-presenter'
 import { GetQuestionBySlugUseCase } from '@/domain/forum/application/use-cases/get-question-by-slug'
+import { QuestionDetailsPresenter } from '../presenters/question-details-presenter'
 
 @Controller()
 export class GetQuestionBySlugController {
@@ -28,7 +28,7 @@ export class GetQuestionBySlugController {
     const question = result.value.question
 
     return {
-      question: QuestionPresenter.toHTTP(question),
+      question: QuestionDetailsPresenter.toHTTP(question),
     }
   }
 }
