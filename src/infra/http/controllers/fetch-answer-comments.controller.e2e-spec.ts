@@ -40,7 +40,9 @@ describe('E2E -> Fetch Comments Answer', () => {
   })
 
   it('should be able to fetch comments of the answer', async () => {
-    const user = await studentFactory.makePrismaStudent()
+    const user = await studentFactory.makePrismaStudent({
+      name: 'John Doe',
+    })
 
     const accessToken = jwt.sign({ sub: user.id.toString() })
 
@@ -67,6 +69,13 @@ describe('E2E -> Fetch Comments Answer', () => {
 
     expect(response.statusCode).toBe(200)
     expect(response.body.comments).toHaveLength(4)
+    expect(response.body.comments).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          authorName: 'John Doe',
+        }),
+      ]),
+    )
   })
 
   it('should be able to fetch comments of the answer paginated', async () => {
