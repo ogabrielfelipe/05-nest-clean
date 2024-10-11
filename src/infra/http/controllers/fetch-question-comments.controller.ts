@@ -11,7 +11,7 @@ import { CurrentUser } from '@/infra/auth/current-user-decorator'
 import { TokenSchema } from '@/infra/auth/jwt.strategy'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation.pipe'
 import { z } from 'zod'
-import { QuestionCommentsPresenter } from '../presenters/question-comments-presenter'
+import { CommentWithAuthorPresenter } from '../presenters/comments-with-author-presenter'
 
 const queryParamsSchema = z.object({
   page: z
@@ -53,8 +53,8 @@ export class FetchQuestionCommentsController {
       throw new BadRequestException()
     }
 
-    const questionComments = result.value.questionComments
+    const comments = result.value.comments
 
-    return { comments: questionComments.map(QuestionCommentsPresenter.toHTTP) }
+    return { comments: comments.map(CommentWithAuthorPresenter.toHTTP) }
   }
 }

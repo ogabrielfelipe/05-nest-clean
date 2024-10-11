@@ -32,7 +32,9 @@ describe('E2E -> Fetch Comments Question', () => {
   })
 
   it('should be able to fetch comments of the question', async () => {
-    const user = await studentFactory.makePrismaStudent()
+    const user = await studentFactory.makePrismaStudent({
+      name: 'John Doe',
+    })
 
     const accessToken = jwt.sign({ sub: user.id.toString() })
 
@@ -54,10 +56,19 @@ describe('E2E -> Fetch Comments Question', () => {
 
     expect(response.statusCode).toBe(200)
     expect(response.body.comments).toHaveLength(4)
+    expect(response.body.comments).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          authorName: 'John Doe',
+        }),
+      ]),
+    )
   })
 
   it('should be able to fetch comments of the question paginated', async () => {
-    const user = await studentFactory.makePrismaStudent()
+    const user = await studentFactory.makePrismaStudent({
+      name: 'John Doe',
+    })
 
     const accessToken = jwt.sign({ sub: user.id.toString() })
 
@@ -79,5 +90,12 @@ describe('E2E -> Fetch Comments Question', () => {
 
     expect(response.statusCode).toBe(200)
     expect(response.body.comments).toHaveLength(3)
+    expect(response.body.comments).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          authorName: 'John Doe',
+        }),
+      ]),
+    )
   })
 })
