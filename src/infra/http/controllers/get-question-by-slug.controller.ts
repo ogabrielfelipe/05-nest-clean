@@ -6,7 +6,7 @@ import {
   Param,
 } from '@nestjs/common'
 import { CurrentUser } from '@/infra/auth/current-user-decorator'
-import { TokenSchema } from '@/infra/auth/jwt.strategy'
+import { UserPayload } from '@/infra/auth/jwt.strategy'
 import { GetQuestionBySlugUseCase } from '@/domain/forum/application/use-cases/get-question-by-slug'
 import { QuestionDetailsPresenter } from '../presenters/question-details-presenter'
 
@@ -16,7 +16,7 @@ export class GetQuestionBySlugController {
 
   @Get('/questions/:slug')
   @HttpCode(200)
-  async handle(@CurrentUser() user: TokenSchema, @Param('slug') slug: string) {
+  async handle(@CurrentUser() user: UserPayload, @Param('slug') slug: string) {
     const result = await this.getQuestionBySlug.execute({
       slug,
     })

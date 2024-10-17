@@ -6,7 +6,7 @@ import {
   Param,
 } from '@nestjs/common'
 import { CurrentUser } from '@/infra/auth/current-user-decorator'
-import { TokenSchema } from '@/infra/auth/jwt.strategy'
+import { UserPayload } from '@/infra/auth/jwt.strategy'
 import { DeleteQuestionCommentUseCase } from '@/domain/forum/application/use-cases/delete-question-comment'
 
 @Controller()
@@ -19,7 +19,7 @@ export class DeleteCommentOnQuestionController {
   @HttpCode(204)
   async handle(
     @Param('id') questionCommentId: string,
-    @CurrentUser() user: TokenSchema,
+    @CurrentUser() user: UserPayload,
   ) {
     const userId = user.sub
 

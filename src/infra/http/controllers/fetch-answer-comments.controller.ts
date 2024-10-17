@@ -8,7 +8,7 @@ import {
   Query,
 } from '@nestjs/common'
 import { CurrentUser } from '@/infra/auth/current-user-decorator'
-import { TokenSchema } from '@/infra/auth/jwt.strategy'
+import { UserPayload } from '@/infra/auth/jwt.strategy'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation.pipe'
 import { z } from 'zod'
 import { CommentWithAuthorPresenter } from '../presenters/comments-with-author-presenter'
@@ -39,7 +39,7 @@ export class FetchAnswerCommentsController {
   @Get('/answers/:answerId/comments')
   @HttpCode(200)
   async handle(
-    @CurrentUser() user: TokenSchema,
+    @CurrentUser() user: UserPayload,
     @Param('answerId') answerId: string,
     @Query(queryValidationPipe) params: QueryParamsSchema,
   ) {

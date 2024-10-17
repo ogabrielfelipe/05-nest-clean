@@ -7,7 +7,7 @@ import {
   Query,
 } from '@nestjs/common'
 import { CurrentUser } from '@/infra/auth/current-user-decorator'
-import { TokenSchema } from '@/infra/auth/jwt.strategy'
+import { UserPayload } from '@/infra/auth/jwt.strategy'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation.pipe'
 import { z } from 'zod'
 import { QuestionPresenter } from '../presenters/question-presenter'
@@ -38,7 +38,7 @@ export class FetchRecentQuestionsController {
   @Get('/questions')
   @HttpCode(200)
   async handle(
-    @CurrentUser() user: TokenSchema,
+    @CurrentUser() user: UserPayload,
     @Query(queryValidationPipe) params: QueryParamsSchema,
   ) {
     const result = await this.fetchRecentQuestions.execute({

@@ -7,7 +7,7 @@ import {
   Put,
 } from '@nestjs/common'
 import { CurrentUser } from '@/infra/auth/current-user-decorator'
-import { TokenSchema } from '@/infra/auth/jwt.strategy'
+import { UserPayload } from '@/infra/auth/jwt.strategy'
 import { z } from 'zod'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation.pipe'
 import { EditAnswerUseCase } from '@/domain/forum/application/use-cases/edit-answer'
@@ -30,7 +30,7 @@ export class EditAnswerController {
   async handle(
     @Body(bodyValidationPipe) body: EditAnswerBodySchema,
     @Param('id') answerId: string,
-    @CurrentUser() user: TokenSchema,
+    @CurrentUser() user: UserPayload,
   ) {
     const { content, attachments } = body
     const userId = user.sub

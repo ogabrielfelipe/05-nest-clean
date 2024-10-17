@@ -6,7 +6,7 @@ import {
   Param,
 } from '@nestjs/common'
 import { CurrentUser } from '@/infra/auth/current-user-decorator'
-import { TokenSchema } from '@/infra/auth/jwt.strategy'
+import { UserPayload } from '@/infra/auth/jwt.strategy'
 import { DeleteAnswerUseCase } from '@/domain/forum/application/use-cases/delete-answer'
 
 @Controller()
@@ -17,7 +17,7 @@ export class DeleteAnswerController {
   @HttpCode(204)
   async handle(
     @Param('id') answerId: string,
-    @CurrentUser() user: TokenSchema,
+    @CurrentUser() user: UserPayload,
   ) {
     const userId = user.sub
 

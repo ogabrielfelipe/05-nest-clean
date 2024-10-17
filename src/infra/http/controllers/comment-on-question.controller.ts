@@ -7,7 +7,7 @@ import {
   Post,
 } from '@nestjs/common'
 import { CurrentUser } from '@/infra/auth/current-user-decorator'
-import { TokenSchema } from '@/infra/auth/jwt.strategy'
+import { UserPayload } from '@/infra/auth/jwt.strategy'
 import { z } from 'zod'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation.pipe'
 import { CommentOnQuestionUseCase } from '@/domain/forum/application/use-cases/comment-on-question'
@@ -29,7 +29,7 @@ export class CommentOnQuestionController {
   async handle(
     @Body(bodyValidationPipe) body: CommentOnQuestionBodySchema,
     @Param('questionId') questionId: string,
-    @CurrentUser() user: TokenSchema,
+    @CurrentUser() user: UserPayload,
   ) {
     const { content } = body
     const userId = user.sub

@@ -6,7 +6,7 @@ import {
   Post,
 } from '@nestjs/common'
 import { CurrentUser } from '@/infra/auth/current-user-decorator'
-import { TokenSchema } from '@/infra/auth/jwt.strategy'
+import { UserPayload } from '@/infra/auth/jwt.strategy'
 import { z } from 'zod'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation.pipe'
 import { CreateQuestionUseCase } from '@/domain/forum/application/use-cases/create-question'
@@ -29,7 +29,7 @@ export class CreateQuestionController {
   @HttpCode(201)
   async handle(
     @Body(bodyValidationPipe) body: CreateQuestionBodySchema,
-    @CurrentUser() user: TokenSchema,
+    @CurrentUser() user: UserPayload,
   ) {
     const { title, content, attachments } = body
     const userId = user.sub
