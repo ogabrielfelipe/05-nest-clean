@@ -1,9 +1,11 @@
 import { DomainEvents } from '@/core/events/domain-events'
-import type { EventHandler } from '@/core/events/event-handler'
-import type { SendNotificationUseCase } from '../use-case/send-notification'
-import type { AnswersRepository } from '@/domain/forum/application/repositories/answers-repository'
+import { EventHandler } from '@/core/events/event-handler'
+import { SendNotificationUseCase } from '../use-case/send-notification'
+import { AnswersRepository } from '@/domain/forum/application/repositories/answers-repository'
 import { QuestionBestAnswerChosenEvent } from '@/domain/forum/enterprise/entities/events/question-best-answer-chosen-event'
+import { Injectable } from '@nestjs/common'
 
+@Injectable()
 export class OnQuestionBestAnswerChosen implements EventHandler {
   constructor(
     private answerRepository: AnswersRepository,

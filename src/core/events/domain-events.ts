@@ -12,6 +12,8 @@ export class DomainEvents {
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   private static markedAggregates: AggregateRoot<any>[] = []
 
+  public static shouldRun = true
+
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   public static markAggregateForDispatch(aggregate: AggregateRoot<any>) {
     // biome-ignore lint/complexity/noThisInStatic: <explanation>
@@ -93,6 +95,10 @@ export class DomainEvents {
 
     // biome-ignore lint/complexity/noThisInStatic: <explanation>
     const isEventRegistered = eventClassName in this.handlersMap
+
+    if (!this.shouldRun) {
+      return
+    }
 
     if (isEventRegistered) {
       // biome-ignore lint/complexity/noThisInStatic: <explanation>
