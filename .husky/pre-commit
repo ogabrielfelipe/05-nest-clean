@@ -5,5 +5,7 @@ pnpm format
 pnpm lint:fix
 pnpm lint
 git add -A
+pnpm test
+pnpm test:e2e
 
 echo 'Done'

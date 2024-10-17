@@ -59,6 +59,7 @@ describe(' E2E -> On question best answer chosen', () => {
         },
       })
       expect(notificationOnDatabase).not.toBeNull()
+      expect(notificationOnDatabase?.content).toEqual(expect.any(String))
     })
   })
 })
