@@ -12,6 +12,10 @@ export const envSchema = z.object({
   AWS_BUCKET_NAME: z.string(),
   AWS_ACCESS_KEY_ID: z.string(),
   AWS_SECRET_ACCESS_KEY: z.string(),
+
+  REDIS_HOST: z.string(),
+  REDIS_PORT: z.number({ coerce: true }),
+  REDIS_DB: z.number({ coerce: true }),
 })
 
 export type EnvVars = z.infer<typeof envSchema>
